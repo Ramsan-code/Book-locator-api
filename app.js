@@ -1,11 +1,6 @@
 // Basic server setup
 import express from "express";
 import mongoose from "mongoose";
-import readerRouter from "./routes/readerRouter.js";
-import bookRouter from "./routes/bookRouter.js";
-import reviewRouter from "./routes/reviewRouter.js";
-import transactionRouter from "./routes/transactionRouter.js";
-
 const connectDB = async () => {
   try {
     await mongoose.connect("mongodb://127.0.0.1:27017/book-link");
@@ -16,6 +11,12 @@ const connectDB = async () => {
 };
 
 connectDB();
+import readerRouter from "./routes/readerRouter.js";
+import bookRouter from "./routes/bookRouter.js";
+import reviewRouter from "./routes/reviewRouter.js";
+import transactionRouter from "./routes/transactionRouter.js";
+
+
 const app = express();
 const PORT = 3000;
 
