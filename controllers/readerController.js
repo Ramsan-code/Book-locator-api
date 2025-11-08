@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 import generateToken from "../utils/generateToken.js";
 export const getAllReaders = async (req, res) => {
   try {
-    const readers = await Reader.find().select("-password"); // Don't send password
+    const readers = await Reader.find().select("-password"); 
     res.status(200).json(readers);
   } catch (error) {
     res.status(500).json({ message: error.message });
