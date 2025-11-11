@@ -2,7 +2,7 @@ import Transaction from "../models/Transaction.js";
 import Book from "../models/Book.js";
 import { sendEmail } from "../services/emailService.js";
 
-// ✨ UPDATED: Create transaction with email notification to seller
+//  UPDATED: Create transaction with email notification to seller
 export const createTransaction = async (req, res, next) => {
   try {
     const { bookId, type, rentDurationDays } = req.body;
