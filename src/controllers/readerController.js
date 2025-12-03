@@ -56,6 +56,14 @@ export const loginReader = async (req, res, next) => {
     if (!isMatch)
       return res.status(401).json({ message: "Invalid credentials" });
 
+    // Check if user is approved (only for regular users, not admins)
+    if (reader.role !== "admin" && !reader.isApproved) {
+      return res.status(403).json({ 
+        message: "Your account is pending admin approval. Please wait for approval before logging in.",
+        isApproved: false 
+      });
+    }
+
     // Update last login
     reader.lastLogin = new Date();
     await reader.save();
@@ -78,17 +86,24 @@ export const loginReader = async (req, res, next) => {
 
 export const getProfile = async (req, res, next) => {
   try {
-    const reader = await Reader.findById(req.user.id).select("-password");
+    console.log("[ReaderController] getProfile called");
+    console.log("[ReaderController] req.user:", req.user);
+    if (!req.user) {
+       console.error("[ReaderController] req.user is missing!");
+       return res.status(500).json({ message: "Server Error: User not attached to request" });
+    }
+    const reader = await Reader.findById(req.user._id).select("-password");
     if (!reader) return res.status(404).json({ message: "Reader not found" });
     res.json(reader);
   } catch (error) {
+    console.error("[ReaderController] getProfile error:", error);
     next(error);
   }
 };
 
 export const updateProfile = async (req, res, next) => {
   try {
-    const reader = await Reader.findById(req.user.id);
+    const reader = await Reader.findById(req.user._id);
     if (!reader) return res.status(404).json({ message: "Reader not found" });
 
     reader.name = req.body.name || reader.name;
@@ -114,7 +129,7 @@ export const logoutReader = async (req, res, next) => {
   try {
     // Optional: Update last logout time in database
     if (req.user) {
-      await Reader.findByIdAndUpdate(req.user.id, {
+      await Reader.findByIdAndUpdate(req.user._id, {
         lastLogout: new Date()
       });
     }
