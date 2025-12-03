@@ -15,8 +15,8 @@ router.post("/register", registerReader);
 router.post("/login", loginReader);
 router.get("/", getAllReaders);
 
-router.get("/profile", getProfile);
-router.put("/profile", updateProfile);
+router.get("/profile", protect, getProfile);
+router.put("/profile", protect, updateProfile);
 router.post("/logout", protect, logoutReader);
 
 export default router;
