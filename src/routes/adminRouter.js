@@ -26,11 +26,19 @@ import {
   // Review Management
   getAllReviews,
   deleteReviewAdmin,
+
+  // Settings Management
+  getSettings,
+  updateSettings,
+  getPublicSettings,
 } from "../controllers/adminController.js";
 
 const router = express.Router();
 
-// All routes require authentication and admin role
+// Public routes (no authentication required)
+router.get("/settings/public", getPublicSettings);
+
+// All other routes require authentication and admin role
 router.use(protect);
 router.use(isAdmin);
 
@@ -58,5 +66,9 @@ router.get("/transactions", getAllTransactions);
 // ==================== REVIEW MANAGEMENT ====================
 router.get("/reviews", getAllReviews);
 router.delete("/reviews/:id", deleteReviewAdmin);
+
+// ==================== SETTINGS MANAGEMENT ====================
+router.get("/settings", getSettings);
+router.put("/settings", updateSettings);
 
 export default router;
