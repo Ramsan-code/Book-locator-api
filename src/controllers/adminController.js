@@ -2,6 +2,7 @@ import Reader from "../models/Reader.js";
 import Book from "../models/Book.js";
 import Transaction from "../models/Transaction.js";
 import Review from "../models/Review.js";
+import Setting from "../models/Setting.js";
 import { AppError } from "../middleware/errorHandler.js";
 import { paginationResponse } from "../utils/paginate.js";
 
@@ -112,7 +113,7 @@ export const approveUser = async (req, res, next) => {
     }
 
     user.isApproved = true;
-    user.approvedBy = req.user.id;
+    user.approvedBy = req.user._id;
     user.approvedAt = new Date();
     await user.save();
 
@@ -242,7 +243,7 @@ export const approveBook = async (req, res, next) => {
 
     book.isApproved = true;
     book.approvalStatus = "approved";
-    book.approvedBy = req.user.id;
+    book.approvedBy = req.user._id;
     book.approvedAt = new Date();
     await book.save();
 
@@ -386,6 +387,152 @@ export const deleteReviewAdmin = async (req, res, next) => {
     res.status(200).json({
       success: true,
       message: "Review deleted successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// ==================== SETTINGS MANAGEMENT ====================
+
+export const getSettings = async (req, res, next) => {
+  try {
+    let settings = await Setting.find().sort({ key: 1 });
+
+    // Initialize default settings if none exist
+    if (settings.length === 0) {
+      const defaultSettings = [
+        {
+          key: "commission_rate",
+          value: 0.08,
+          description: "Commission rate for transactions (e.g., 0.08 for 8%)",
+          type: "number",
+        },
+        {
+          key: "site_name",
+          value: "Book Locator",
+          description: "Name of the application",
+          type: "string",
+        },
+        {
+          key: "support_email",
+          value: "support@booklocator.com",
+          description: "Support email address",
+          type: "string",
+        },
+        {
+          key: "featured_listings_limit",
+          value: 4,
+          description: "Number of books to display in Featured Listings section",
+          type: "number",
+        },
+        {
+          key: "new_arrivals_limit",
+          value: 4,
+          description: "Number of books to display in New Arrivals section",
+          type: "number",
+        },
+      ];
+
+      settings = await Setting.insertMany(defaultSettings);
+    }
+
+    // Ensure critical settings exist even if other settings exist
+    const criticalSettings = [
+      {
+        key: "commission_rate",
+        value: 0.08,
+        description: "Commission rate for transactions (e.g., 0.08 for 8%)",
+        type: "number",
+      },
+      {
+        key: "featured_listings_limit",
+        value: 4,
+        description: "Number of books to display in Featured Listings section",
+        type: "number",
+      },
+      {
+        key: "new_arrivals_limit",
+        value: 4,
+        description: "Number of books to display in New Arrivals section",
+        type: "number",
+      },
+    ];
+
+    for (const criticalSetting of criticalSettings) {
+      const exists = settings.find((s) => s.key === criticalSetting.key);
+      if (!exists) {
+        const newSetting = await Setting.create(criticalSetting);
+        settings.push(newSetting);
+      }
+    }
+
+    res.status(200).json({
+      success: true,
+      data: settings,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateSettings = async (req, res, next) => {
+  try {
+    const { settings } = req.body;
+
+    if (!Array.isArray(settings)) {
+      return next(new AppError("Settings must be an array", 400));
+    }
+
+    const updatedSettings = [];
+
+    for (const setting of settings) {
+      const { key, value } = setting;
+      
+      const updatedSetting = await Setting.findOneAndUpdate(
+        { key },
+        { value },
+        { new: true, runValidators: true }
+      );
+
+      if (updatedSetting) {
+        updatedSettings.push(updatedSetting);
+      }
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Settings updated successfully",
+      data: updatedSettings,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Get public settings (no authentication required)
+export const getPublicSettings = async (req, res, next) => {
+  try {
+    // Fetch only public-facing settings
+    const publicKeys = ['featured_listings_limit', 'new_arrivals_limit', 'site_name'];
+    const settings = await Setting.find({ key: { $in: publicKeys } });
+
+    // Return as key-value object for easier frontend consumption
+    const settingsObj = {};
+    settings.forEach(setting => {
+      settingsObj[setting.key] = setting.value;
+    });
+
+    // Provide defaults if settings don't exist
+    const defaults = {
+      featured_listings_limit: 4,
+      new_arrivals_limit: 4,
+      site_name: 'Book Locator'
+    };
+
+    res.status(200).json({
+      success: true,
+      data: { ...defaults, ...settingsObj }
     });
   } catch (error) {
     next(error);
