@@ -56,7 +56,10 @@ export const getAllBooks = async (req, res) => {
     }
 
     if (isApproved !== undefined) {
-      query.isApproved = isApproved === "true";
+      if (isApproved !== "all") {
+        query.isApproved = isApproved === "true";
+      }
+      // If "all", we don't add isApproved to query, so it returns both
     } else {
       query.isApproved = true;
     }
@@ -102,7 +105,18 @@ export const getAllBooks = async (req, res) => {
       .limit(limitNum);
 
     const total = await Book.countDocuments(query);
-    const response = paginationResponse(books, pageNum, limitNum, total);
+    
+    // Transform books to include latitude and longitude
+    const transformedBooks = books.map(book => {
+      const bookObj = book.toObject();
+      if (bookObj.location && bookObj.location.coordinates) {
+        bookObj.longitude = bookObj.location.coordinates[0];
+        bookObj.latitude = bookObj.location.coordinates[1];
+      }
+      return bookObj;
+    });
+    
+    const response = paginationResponse(transformedBooks, pageNum, limitNum, total);
 
     response.filters = {
       search,
@@ -363,7 +377,14 @@ export const getBooksById = async (req, res) => {
     book.views = (book.views || 0) + 1;
     await book.save();
 
-    res.json(book);
+    // Transform book to include latitude and longitude
+    const bookObj = book.toObject();
+    if (bookObj.location && bookObj.location.coordinates) {
+      bookObj.longitude = bookObj.location.coordinates[0];
+      bookObj.latitude = bookObj.location.coordinates[1];
+    }
+
+    res.json(bookObj);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
