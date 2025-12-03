@@ -375,6 +375,288 @@ const emailTemplates = {
       </html>
     `,
   }),
+
+  // Request accepted - Email to buyer with seller contact info
+  requestAccepted: (buyerName, sellerName, sellerEmail, sellerPhone, sellerAddress, bookTitle, bookAuthor, price) => ({
+    subject: ` Your Request for "${bookTitle}" Has Been Accepted!`,
+    html: `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <style>
+          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+          .header { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+          .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
+          .contact-box { background: white; padding: 20px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #11998e; }
+          .contact-item { margin: 10px 0; padding: 10px; background: #f0f9ff; border-radius: 3px; }
+          .footer { text-align: center; margin-top: 20px; font-size: 12px; color: #666; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>🎉 Request Accepted!</h1>
+          </div>
+          <div class="content">
+            <h2>Great News, ${buyerName}!</h2>
+            <p><strong>${sellerName}</strong> has accepted your request for <strong>"${bookTitle}"</strong> by ${bookAuthor}.</p>
+            
+            <p><strong>Price:</strong> ₹${price}</p>
+            
+            <div class="contact-box">
+              <h3>📞 Seller Contact Information</h3>
+              <p>You can now contact the seller to arrange the book handover:</p>
+              
+              <div class="contact-item">
+                <strong>👤 Name:</strong> ${sellerName}
+              </div>
+              <div class="contact-item">
+                <strong>📧 Email:</strong> ${sellerEmail}
+              </div>
+              <div class="contact-item">
+                <strong>📱 Phone:</strong> ${sellerPhone}
+              </div>
+              <div class="contact-item">
+                <strong>📍 Location:</strong> ${sellerAddress}
+              </div>
+            </div>
+            
+            <p><strong>Next Steps:</strong></p>
+            <ul>
+              <li>Contact the seller using the information above</li>
+              <li>Arrange a convenient time and place to meet</li>
+              <li>Inspect the book before payment</li>
+              <li>Complete the transaction safely</li>
+            </ul>
+            
+            <p><strong>Safety Tips:</strong></p>
+            <ul>
+              <li>Meet in a public place</li>
+              <li>Bring exact change if paying cash</li>
+              <li>Inspect the book condition</li>
+              <li>Trust your instincts</li>
+            </ul>
+            
+            <p>Happy reading!</p>
+            <p><strong>The BookLink Team</strong></p>
+          </div>
+          <div class="footer">
+            <p>&copy; ${new Date().getFullYear()} BookLink. All rights reserved.</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `,
+  }),
+
+  // Request accepted - Email to seller with buyer contact info
+  requestAcceptedSeller: (sellerName, buyerName, buyerEmail, buyerPhone, buyerAddress, bookTitle, bookAuthor, price) => ({
+    subject: ` You Accepted a Request for "${bookTitle}"`,
+    html: `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <style>
+          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+          .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+          .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
+          .contact-box { background: white; padding: 20px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #667eea; }
+          .contact-item { margin: 10px 0; padding: 10px; background: #f0f9ff; border-radius: 3px; }
+          .footer { text-align: center; margin-top: 20px; font-size: 12px; color: #666; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>✅ Request Accepted</h1>
+          </div>
+          <div class="content">
+            <h2>Hello ${sellerName},</h2>
+            <p>You have accepted <strong>${buyerName}'s</strong> request for your book <strong>"${bookTitle}"</strong> by ${bookAuthor}.</p>
+            
+            <p><strong>Price:</strong> ₹${price}</p>
+            
+            <div class="contact-box">
+              <h3>📞 Buyer Contact Information</h3>
+              <p>Here are the buyer's details to arrange the book handover:</p>
+              
+              <div class="contact-item">
+                <strong>👤 Name:</strong> ${buyerName}
+              </div>
+              <div class="contact-item">
+                <strong>📧 Email:</strong> ${buyerEmail}
+              </div>
+              <div class="contact-item">
+                <strong>📱 Phone:</strong> ${buyerPhone}
+              </div>
+              <div class="contact-item">
+                <strong>📍 Location:</strong> ${buyerAddress}
+              </div>
+            </div>
+            
+            <p><strong>Next Steps:</strong></p>
+            <ul>
+              <li>Wait for the buyer to contact you, or reach out first</li>
+              <li>Arrange a convenient time and place to meet</li>
+              <li>Prepare the book for handover</li>
+              <li>Complete the transaction safely</li>
+            </ul>
+            
+            <p><strong>Safety Tips:</strong></p>
+            <ul>
+              <li>Meet in a public place during daylight</li>
+              <li>Bring the book in good condition as described</li>
+              <li>Verify payment before handing over the book</li>
+              <li>Trust your instincts</li>
+            </ul>
+            
+            <p>Thank you for being part of our community!</p>
+            <p><strong>The BookLink Team</strong></p>
+          </div>
+          <div class="footer">
+            <p>&copy; ${new Date().getFullYear()} BookLink. All rights reserved.</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `,
+  }),
+
+  // Commission payment request
+  commissionPaymentRequest: (userName, bookTitle, bookPrice, commissionAmount, role) => ({
+    subject: `💰 Commission Payment Required for "${bookTitle}"`,
+    html: `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <style>
+          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+          .header { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+          .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
+          .info-box { background: white; padding: 20px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #f5576c; }
+          .amount { font-size: 32px; font-weight: bold; color: #f5576c; text-align: center; margin: 20px 0; }
+          .button { display: inline-block; padding: 12px 30px; background: #f5576c; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+          .footer { text-align: center; margin-top: 20px; font-size: 12px; color: #666; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>💰 Commission Payment Required</h1>
+          </div>
+          <div class="content">
+            <h2>Hello ${userName}!</h2>
+            <p>Great news! The ${role === 'buyer' ? 'seller has accepted your request' : 'buyer has requested your book'}.</p>
+            
+            <div class="info-box">
+              <p><strong>📖 Book:</strong> ${bookTitle}</p>
+              <p><strong>💵 Book Price:</strong> ₹${bookPrice}</p>
+              <p><strong>👥 Your Role:</strong> ${role === 'buyer' ? 'Buyer' : 'Seller'}</p>
+            </div>
+            
+            <h3>📋 Next Step: Pay Commission</h3>
+            <p>To proceed with this transaction, please pay a small commission fee:</p>
+            
+            <div class="amount">
+              ₹${commissionAmount}
+            </div>
+            
+            <p style="text-align: center; color: #666; font-size: 14px;">
+              (8% of book price)
+            </p>
+            
+            <h3>🔒 Why Commission?</h3>
+            <ul>
+              <li><strong>Trust & Safety:</strong> Ensures both parties are serious</li>
+              <li><strong>Platform Maintenance:</strong> Helps us keep the platform running</li>
+              <li><strong>Contact Exchange:</strong> Once both pay, you'll receive contact details</li>
+            </ul>
+            
+            <h3>📝 How It Works:</h3>
+            <ol>
+              <li>You pay ₹${commissionAmount} commission</li>
+              <li>${role === 'buyer' ? 'Seller' : 'Buyer'} also pays ₹${commissionAmount} commission</li>
+              <li>Admin shares contact information with both parties</li>
+              <li>You meet in person and exchange the book for ₹${bookPrice} cash</li>
+            </ol>
+            
+            <center>
+              <a href="${process.env.FRONTEND_URL || 'http://localhost:3000'}/my-transactions" class="button">
+                Pay Commission Now
+              </a>
+            </center>
+            
+            <p><strong>Important:</strong> The ₹${bookPrice} book price will be paid directly between you and the ${role === 'buyer' ? 'seller' : 'buyer'} when you meet. Our platform only collects the ₹${commissionAmount} commission.</p>
+            
+            <p>Best regards,<br><strong>The BookLink Team</strong></p>
+          </div>
+          <div class="footer">
+            <p>&copy; ${new Date().getFullYear()} BookLink. All rights reserved.</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `,
+  }),
+
+  // Commission payment confirmed
+  commissionPaymentConfirmed: (userName, bookTitle, commissionAmount, role) => ({
+    subject: `✅ Commission Payment Received for "${bookTitle}"`,
+    html: `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <style>
+          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+          .header { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+          .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
+          .success-box { background: #d4edda; border: 1px solid #c3e6cb; color: #155724; padding: 20px; border-radius: 5px; margin: 20px 0; }
+          .footer { text-align: center; margin-top: 20px; font-size: 12px; color: #666; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>✅ Payment Confirmed!</h1>
+          </div>
+          <div class="content">
+            <h2>Thank you, ${userName}!</h2>
+            
+            <div class="success-box">
+              <h3 style="margin-top: 0;">✅ Commission Payment Received</h3>
+              <p><strong>Amount:</strong> ₹${commissionAmount}</p>
+              <p><strong>Book:</strong> ${bookTitle}</p>
+              <p><strong>Status:</strong> Payment confirmed</p>
+            </div>
+            
+            <h3>📋 What Happens Next?</h3>
+            <p>We're waiting for the ${role === 'buyer' ? 'seller' : 'buyer'} to pay their commission (₹${commissionAmount}).</p>
+            
+            <p><strong>Once both parties have paid:</strong></p>
+            <ul>
+              <li>✉️ You'll receive an email with ${role === 'buyer' ? 'seller' : 'buyer'}'s contact information</li>
+              <li>📞 You can contact them to arrange a meeting</li>
+              <li>🤝 Meet in person to exchange the book</li>
+            </ul>
+            
+            <p><strong>Reminder:</strong> The book price (full amount) will be paid directly when you meet. You've only paid the platform commission.</p>
+            
+            <p>We'll notify you as soon as the other party completes their payment!</p>
+            
+            <p>Best regards,<br><strong>The BookLink Team</strong></p>
+          </div>
+          <div class="footer">
+            <p>&copy; ${new Date().getFullYear()} BookLink. All rights reserved.</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `,
+  }),
 };
 
 // Send email function
@@ -408,6 +690,47 @@ export const sendEmail = async (to, template, data = {}) => {
         break;
       case "welcomeEmail":
         emailContent = emailTemplates.welcomeEmail(data.userName, data.userEmail);
+        break;
+      case "requestAccepted":
+        emailContent = emailTemplates.requestAccepted(
+          data.buyerName,
+          data.sellerName,
+          data.sellerEmail,
+          data.sellerPhone,
+          data.sellerAddress,
+          data.bookTitle,
+          data.bookAuthor,
+          data.price
+        );
+        break;
+      case "requestAcceptedSeller":
+        emailContent = emailTemplates.requestAcceptedSeller(
+          data.sellerName,
+          data.buyerName,
+          data.buyerEmail,
+          data.buyerPhone,
+          data.buyerAddress,
+          data.bookTitle,
+          data.bookAuthor,
+          data.price
+        );
+        break;
+      case "commissionPaymentRequest":
+        emailContent = emailTemplates.commissionPaymentRequest(
+          data.userName,
+          data.bookTitle,
+          data.bookPrice,
+          data.commissionAmount,
+          data.role
+        );
+        break;
+      case "commissionPaymentConfirmed":
+        emailContent = emailTemplates.commissionPaymentConfirmed(
+          data.userName,
+          data.bookTitle,
+          data.commissionAmount,
+          data.role
+        );
         break;
       default:
         throw new Error("Invalid email template");
