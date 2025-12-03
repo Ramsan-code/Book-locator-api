@@ -4,6 +4,12 @@ import cors from "cors";
 import connectDB from "./src/config/db.js";
 import {errorHandler,notFound} from "./src/middleware/errorHandler.js"
 import adminRouter from "./src/routes/adminRouter.js"
+import uploadRouter from "./src/routes/uploadRouter.js";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 dotenv.config();
 const app = express();
@@ -26,6 +32,11 @@ app.use("/api/books", bookRouter);
 app.use("/api/reviews", reviewRouter);
 app.use("/api/transactions", transactionRouter);
 app.use("/api/admin",adminRouter);
+app.use("/api/upload", uploadRouter);
+
+// Static uploads removed in favor of Cloudinary
+// const uploadsPath = path.join(__dirname, "uploads");
+// app.use("/uploads", express.static(uploadsPath));
 app.use(errorHandler)
 app.use(notFound)
 
