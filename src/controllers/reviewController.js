@@ -33,12 +33,13 @@ export const createReview = async (req, res, next) => {
 
     const review = await Review.create({
       book: bookId,
-      reviewer: req.user.id,
+      reviewer: req.user._id,
       rating,
       comment,
     });
 
     res.status(201).json({
+      success: true,
       message: "Review added successfully",
       review,
     });
@@ -54,7 +55,7 @@ export const getReviewsByBook = async (req, res, next) => {
       .populate("reviewer", "name email")
       .sort({ createdAt: -1 });
 
-    res.json(reviews);
+    res.json({ success: true, reviews });
   } catch (error) {
     next(error);
   }
@@ -69,7 +70,7 @@ export const deleteReview = async (req, res, next) => {
       return res.status(403).json({ message: "Not authorized" });
 
     await review.deleteOne();
-    res.json({ message: "Review deleted successfully" });
+    res.json({ success: true, message: "Review deleted successfully" });
   } catch (error) {
     next(error);
   }
