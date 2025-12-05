@@ -57,6 +57,11 @@ const readerSchema = new mongoose.Schema(
     },
     bio: String,
     avatar: String,
+    // Additional Profile Fields
+    address: String,
+    city: String,
+    phone_no: String,
+    image: String, // URL to profile image
     // Track last login
     lastLogin: {
       type: Date,
