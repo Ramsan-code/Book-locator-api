@@ -215,13 +215,56 @@ export const getAllBooksAdmin = async (req, res, next) => {
 export const getPendingBooks = async (req, res, next) => {
   try {
     const books = await Book.find({ approvalStatus: "pending" })
-      .populate("owner", "name email")
+      .populate("owner", "name email bio avatar createdAt location")
       .sort({ createdAt: -1 });
+
+    // Enhance with owner statistics
+    const booksWithStats = await Promise.all(
+      books.map(async (book) => {
+        const bookObj = book.toObject();
+        
+        if (bookObj.owner) {
+          // Get owner's book statistics
+          const [totalBooks, approvedBooks, avgRating] = await Promise.all([
+            Book.countDocuments({ owner: bookObj.owner._id }),
+            Book.countDocuments({ owner: bookObj.owner._id, approvalStatus: "approved" }),
+            Review.aggregate([
+              {
+                $lookup: {
+                  from: "books",
+                  localField: "book",
+                  foreignField: "_id",
+                  as: "bookDetails"
+                }
+              },
+              { $unwind: "$bookDetails" },
+              { $match: { "bookDetails.owner": bookObj.owner._id } },
+              {
+                $group: {
+                  _id: null,
+                  avgRating: { $avg: "$rating" },
+                  totalReviews: { $sum: 1 }
+                }
+              }
+            ])
+          ]);
+
+          bookObj.owner.stats = {
+            totalBooks,
+            approvedBooks,
+            averageRating: avgRating[0]?.avgRating || 0,
+            totalReviews: avgRating[0]?.totalReviews || 0
+          };
+        }
+
+        return bookObj;
+      })
+    );
 
     res.status(200).json({
       success: true,
-      count: books.length,
-      data: books,
+      count: booksWithStats.length,
+      data: booksWithStats,
     });
   } catch (error) {
     next(error);
@@ -318,6 +361,92 @@ export const deleteBookAdmin = async (req, res, next) => {
     res.status(200).json({
       success: true,
       message: "Book deleted successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Get detailed owner information for admin review
+export const getOwnerDetails = async (req, res, next) => {
+  try {
+    const { ownerId } = req.params;
+
+    // Get owner profile
+    const owner = await Reader.findById(ownerId).select("-password");
+    
+    if (!owner) {
+      return next(new AppError("Owner not found", 404));
+    }
+
+    // Get owner's all books with approval status
+    const books = await Book.find({ owner: ownerId })
+      .select("title author category price approvalStatus isApproved createdAt image")
+      .sort({ createdAt: -1 });
+
+    // Get owner's reviews (reviews on their books)
+    const reviews = await Review.aggregate([
+      {
+        $lookup: {
+          from: "books",
+          localField: "book",
+          foreignField: "_id",
+          as: "bookDetails"
+        }
+      },
+      { $unwind: "$bookDetails" },
+      { $match: { "bookDetails.owner": owner._id } },
+      {
+        $lookup: {
+          from: "readers",
+          localField: "reviewer",
+          foreignField: "_id",
+          as: "reviewerDetails"
+        }
+      },
+      { $unwind: "$reviewerDetails" },
+      {
+        $project: {
+          rating: 1,
+          comment: 1,
+          createdAt: 1,
+          "reviewer.name": "$reviewerDetails.name",
+          "reviewer.avatar": "$reviewerDetails.avatar",
+          "book.title": "$bookDetails.title"
+        }
+      },
+      { $sort: { createdAt: -1 } },
+      { $limit: 10 }
+    ]);
+
+    // Get transaction statistics
+    const [sellerTransactions, buyerTransactions] = await Promise.all([
+      Transaction.countDocuments({ seller: ownerId }),
+      Transaction.countDocuments({ buyer: ownerId })
+    ]);
+
+    // Calculate statistics
+    const stats = {
+      totalBooks: books.length,
+      approvedBooks: books.filter(b => b.approvalStatus === "approved").length,
+      pendingBooks: books.filter(b => b.approvalStatus === "pending").length,
+      rejectedBooks: books.filter(b => b.approvalStatus === "rejected").length,
+      averageRating: reviews.length > 0 
+        ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length 
+        : 0,
+      totalReviews: reviews.length,
+      totalSales: sellerTransactions,
+      totalPurchases: buyerTransactions
+    };
+
+    res.status(200).json({
+      success: true,
+      data: {
+        owner,
+        books,
+        reviews,
+        stats
+      }
     });
   } catch (error) {
     next(error);
