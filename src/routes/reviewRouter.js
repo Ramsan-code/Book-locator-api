@@ -5,13 +5,14 @@ import {
   getReviewsByBook,
   deleteReview,
 } from "../controllers/reviewController.js";
+import { protect } from "../middleware/auth.js";
 
 const router = express.Router();
 
 router.get("/", getAllReviews);
 router.get("/:bookId", getReviewsByBook);
 
-router.post("/:bookId", createReview);
-router.delete("/:id", deleteReview);
+router.post("/:bookId", protect, createReview);
+router.delete("/:id", protect, deleteReview);
 
 export default router;
