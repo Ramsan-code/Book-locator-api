@@ -108,11 +108,18 @@ export const updateProfile = async (req, res, next) => {
 
     reader.name = req.body.name || reader.name;
     reader.email = req.body.email || reader.email;
+    reader.address = req.body.address || reader.address;
+    reader.city = req.body.city || reader.city;
+    reader.phone_no = req.body.phone_no || reader.phone_no;
+    
     if (req.body.password) {
       reader.password = req.body.password;
     }
     if (req.body.location) {
       reader.location = req.body.location;
+    }
+    if (req.body.image !== undefined) {
+      reader.image = req.body.image;
     }
 
     const updatedReader = await reader.save();
@@ -120,6 +127,12 @@ export const updateProfile = async (req, res, next) => {
       _id: updatedReader._id,
       name: updatedReader.name,
       email: updatedReader.email,
+      address: updatedReader.address,
+      city: updatedReader.city,
+      phone_no: updatedReader.phone_no,
+      image: updatedReader.image,
+      role: updatedReader.role,
+      isApproved: updatedReader.isApproved,
     });
   } catch (error) {
     next(error);
@@ -138,6 +151,39 @@ export const logoutReader = async (req, res, next) => {
       success: true,
       message: "Logged out successfully"
     });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const changePassword = async (req, res, next) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+    
+    const reader = await Reader.findById(req.user._id).select("+password");
+    if (!reader) return res.status(404).json({ message: "Reader not found" });
+
+    const isMatch = await reader.matchPassword(currentPassword);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Invalid current password" });
+    }
+
+    reader.password = newPassword;
+    await reader.save();
+
+    res.json({ success: true, message: "Password updated successfully" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteAccount = async (req, res, next) => {
+  try {
+    const reader = await Reader.findById(req.user._id);
+    if (!reader) return res.status(404).json({ message: "Reader not found" });
+
+    await Reader.deleteOne({ _id: reader._id });
+    res.json({ success: true, message: "Account deleted successfully" });
   } catch (error) {
     next(error);
   }
