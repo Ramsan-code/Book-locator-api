@@ -19,6 +19,7 @@ import {
   rejectBook,
   toggleFeaturedBook,
   deleteBookAdmin,
+  getOwnerDetails,
   
   // Transaction Management
   getAllTransactions,
@@ -55,6 +56,7 @@ router.delete("/users/:id", deleteUser);
 // ==================== BOOK MANAGEMENT ====================
 router.get("/books", getAllBooksAdmin);
 router.get("/books/pending", getPendingBooks);
+router.get("/books/owner/:ownerId", getOwnerDetails);
 router.put("/books/:id/approve", approveBook);
 router.put("/books/:id/reject", rejectBook);
 router.put("/books/:id/toggle-featured", toggleFeaturedBook);
