@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import Reader from "../models/Reader.js";
-import connectDB from "../config/db.js";
+import Reader from "../src/models/Reader.js";
+import connectDB from "../src/config/db.js";
 
 dotenv.config();
 
