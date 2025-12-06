@@ -1,6 +1,9 @@
 {
   "version": 2,
-  "builds": [{ "src": "app.js", "use": "@vercel/node" }],
+  "builds": [
+    { "src": "app.js", "use": "@vercel/node" }
+  ],
+
   "headers": [
     {
       "source": "/api/(.*)",
@@ -12,15 +15,15 @@
       ]
     }
   ],
-  "routes": [
+
+  "rewrites": [
     {
-      "src": "/api/(.*)",
-      "methods": ["OPTIONS"],
-      "dest": "app.js"
+      "source": "/api/:match*",
+      "destination": "/app.js"
     },
     {
-      "src": "/(.*)",
-      "dest": "app.js"
+      "source": "/:match*",
+      "destination": "/app.js"
     }
   ]
 }
