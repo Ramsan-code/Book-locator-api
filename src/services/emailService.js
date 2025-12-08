@@ -402,7 +402,7 @@ const emailTemplates = {
             <h2>Great News, ${buyerName}!</h2>
             <p><strong>${sellerName}</strong> has accepted your request for <strong>"${bookTitle}"</strong> by ${bookAuthor}.</p>
             
-            <p><strong>Price:</strong> ₹${price}</p>
+            <p><strong>Price:</strong> Rs. ${price}</p>
             
             <div class="contact-box">
               <h3>📞 Seller Contact Information</h3>
@@ -476,7 +476,7 @@ const emailTemplates = {
             <h2>Hello ${sellerName},</h2>
             <p>You have accepted <strong>${buyerName}'s</strong> request for your book <strong>"${bookTitle}"</strong> by ${bookAuthor}.</p>
             
-            <p><strong>Price:</strong> ₹${price}</p>
+            <p><strong>Price:</strong> Rs. ${price}</p>
             
             <div class="contact-box">
               <h3>📞 Buyer Contact Information</h3>
@@ -553,7 +553,7 @@ const emailTemplates = {
             
             <div class="info-box">
               <p><strong>📖 Book:</strong> ${bookTitle}</p>
-              <p><strong>💵 Book Price:</strong> ₹${bookPrice}</p>
+              <p><strong>💵 Book Price:</strong> Rs. ${bookPrice}</p>
               <p><strong>👥 Your Role:</strong> ${role === 'buyer' ? 'Buyer' : 'Seller'}</p>
             </div>
             
@@ -561,7 +561,7 @@ const emailTemplates = {
             <p>To proceed with this transaction, please pay a small commission fee:</p>
             
             <div class="amount">
-              ₹${commissionAmount}
+              Rs. ${commissionAmount}
             </div>
             
             <p style="text-align: center; color: #666; font-size: 14px;">
@@ -577,10 +577,10 @@ const emailTemplates = {
             
             <h3>📝 How It Works:</h3>
             <ol>
-              <li>You pay ₹${commissionAmount} commission</li>
-              <li>${role === 'buyer' ? 'Seller' : 'Buyer'} also pays ₹${commissionAmount} commission</li>
+              <li>You pay Rs. ${commissionAmount} commission</li>
+              <li>${role === 'buyer' ? 'Seller' : 'Buyer'} also pays Rs. ${commissionAmount} commission</li>
               <li>Admin shares contact information with both parties</li>
-              <li>You meet in person and exchange the book for ₹${bookPrice} cash</li>
+              <li>You meet in person and exchange the book for Rs. ${bookPrice} cash</li>
             </ol>
             
             <center>
@@ -589,7 +589,7 @@ const emailTemplates = {
               </a>
             </center>
             
-            <p><strong>Important:</strong> The ₹${bookPrice} book price will be paid directly between you and the ${role === 'buyer' ? 'seller' : 'buyer'} when you meet. Our platform only collects the ₹${commissionAmount} commission.</p>
+            <p><strong>Important:</strong> The Rs. ${bookPrice} book price will be paid directly between you and the ${role === 'buyer' ? 'seller' : 'buyer'} when you meet. Our platform only collects the Rs. ${commissionAmount} commission.</p>
             
             <p>Best regards,<br><strong>The BookLink Team</strong></p>
           </div>
@@ -628,13 +628,13 @@ const emailTemplates = {
             
             <div class="success-box">
               <h3 style="margin-top: 0;">✅ Commission Payment Received</h3>
-              <p><strong>Amount:</strong> ₹${commissionAmount}</p>
+              <p><strong>Amount:</strong> Rs. ${commissionAmount}</p>
               <p><strong>Book:</strong> ${bookTitle}</p>
               <p><strong>Status:</strong> Payment confirmed</p>
             </div>
             
             <h3>📋 What Happens Next?</h3>
-            <p>We're waiting for the ${role === 'buyer' ? 'seller' : 'buyer'} to pay their commission (₹${commissionAmount}).</p>
+            <p>We're waiting for the ${role === 'buyer' ? 'seller' : 'buyer'} to pay their commission (Rs. ${commissionAmount}).</p>
             
             <p><strong>Once both parties have paid:</strong></p>
             <ul>

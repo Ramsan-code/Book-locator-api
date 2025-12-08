@@ -111,6 +111,9 @@ export const getProfile = async (req, res, next) => {
 
 export const updateProfile = async (req, res, next) => {
   try {
+    console.log("[UpdateProfile] Request body:", JSON.stringify(req.body));
+    console.log("[UpdateProfile] User ID:", req.user?._id);
+    
     const reader = await Reader.findById(req.user._id);
     if (!reader) return res.status(404).json({ message: "Reader not found" });
 
@@ -123,8 +126,9 @@ export const updateProfile = async (req, res, next) => {
     if (req.body.password) {
       reader.password = req.body.password;
     }
+    // Note: location string is saved to city field since the model's location field is for GeoJSON coordinates
     if (req.body.location) {
-      reader.location = req.body.location;
+      reader.city = req.body.location;
     }
     if (req.body.image !== undefined) {
       reader.image = req.body.image;
@@ -132,6 +136,8 @@ export const updateProfile = async (req, res, next) => {
 
     const updatedReader = await reader.save();
     res.json({
+      success: true,
+      message: "Profile updated successfully",
       _id: updatedReader._id,
       name: updatedReader.name,
       email: updatedReader.email,
@@ -168,11 +174,20 @@ export const changePassword = async (req, res, next) => {
   try {
     const { currentPassword, newPassword } = req.body;
     
+    console.log('[ChangePassword] Request received');
+    console.log('[ChangePassword] User ID:', req.user._id);
+    console.log('[ChangePassword] Current password provided length:', currentPassword?.length);
+    
     const reader = await Reader.findById(req.user._id).select("+password");
     if (!reader) return res.status(404).json({ message: "Reader not found" });
 
+    console.log('[ChangePassword] Reader email:', reader.email);
+    console.log('[ChangePassword] Comparing passwords...');
     const isMatch = await reader.matchPassword(currentPassword);
+    console.log('[ChangePassword] Password match result:', isMatch);
+    
     if (!isMatch) {
+      console.log('[ChangePassword] Password mismatch - rejecting');
       return res.status(401).json({ message: "Invalid current password" });
     }
 
