@@ -48,13 +48,26 @@ export const loginReader = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
+    const fs = await import('fs');
+    const path = await import('path');
+    const logFile = path.join(process.cwd(), 'login-debug.log');
+    const log = (msg) => fs.appendFileSync(logFile, `${new Date().toISOString()} - ${msg}\n`);
+
+    log(`Attempting login for email: ${email}`);
+    
     const reader = await Reader.findOne({ email }).select("+password");
-    if (!reader)
+    if (!reader) {
+      log(`User not found for email: ${email}`);
       return res.status(401).json({ message: "Invalid credentials" });
+    }
 
     const isMatch = await bcrypt.compare(password, reader.password);
-    if (!isMatch)
+    if (!isMatch) {
+      log(`Password mismatch for email: ${email}`);
+      log(`Provided password: '${password}' (length: ${password.length})`);
+      log(`Stored hash: ${reader.password}`);
       return res.status(401).json({ message: "Invalid credentials" });
+    }
 
     // Check if user is approved (only for regular users, not admins)
     if (reader.role !== "admin" && !reader.isApproved) {

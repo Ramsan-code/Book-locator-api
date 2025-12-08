@@ -1,0 +1,32 @@
+2025-12-08T02:36:36.855Z - Attempting login for email: admin@booklocator.com
+2025-12-08T02:36:37.109Z - Password mismatch for email: admin@booklocator.com
+2025-12-08T02:36:37.109Z - Provided password: 'password1234' (length: 12)
+2025-12-08T02:36:37.109Z - Stored hash: $2b$10$cA5RMKe2pboNem.yMHmkKO9G.yHwCKFYpI0hxdmINsAIiiWbG0kvy
+2025-12-08T02:36:43.687Z - Attempting login for email: admin@booklocator.com
+2025-12-08T02:36:43.919Z - Password mismatch for email: admin@booklocator.com
+2025-12-08T02:36:43.919Z - Provided password: 'password1234' (length: 12)
+2025-12-08T02:36:43.919Z - Stored hash: $2b$10$cA5RMKe2pboNem.yMHmkKO9G.yHwCKFYpI0hxdmINsAIiiWbG0kvy
+2025-12-08T02:40:01.455Z - Attempting login for email: admin@booklocator.com
+2025-12-08T02:40:01.691Z - Password mismatch for email: admin@booklocator.com
+2025-12-08T02:40:01.691Z - Provided password: 'password1234' (length: 12)
+2025-12-08T02:40:01.691Z - Stored hash: $2b$10$cA5RMKe2pboNem.yMHmkKO9G.yHwCKFYpI0hxdmINsAIiiWbG0kvy
+2025-12-08T02:41:48.854Z - Attempting login for email: admin@booklocator.com
+2025-12-08T02:41:49.122Z - Password mismatch for email: admin@booklocator.com
+2025-12-08T02:41:49.123Z - Provided password: 'password1234' (length: 12)
+2025-12-08T02:41:49.123Z - Stored hash: $2b$10$cA5RMKe2pboNem.yMHmkKO9G.yHwCKFYpI0hxdmINsAIiiWbG0kvy
+2025-12-08T02:42:43.134Z - Attempting login for email: admin@booklocator.com
+2025-12-08T02:42:43.384Z - Password mismatch for email: admin@booklocator.com
+2025-12-08T02:42:43.384Z - Provided password: 'password1234' (length: 12)
+2025-12-08T02:42:43.384Z - Stored hash: $2b$10$cA5RMKe2pboNem.yMHmkKO9G.yHwCKFYpI0hxdmINsAIiiWbG0kvy
+2025-12-08T02:49:30.488Z - Attempting login for email: admin@booklocator.com
+2025-12-08T02:49:30.747Z - Password mismatch for email: admin@booklocator.com
+2025-12-08T02:49:30.748Z - Provided password: 'password1234' (length: 12)
+2025-12-08T02:49:30.748Z - Stored hash: $2b$10$ni5rt/PbD7jAdjXjvR7H2eC5MeaCIjC7XpUkd6FLVkAmVG6XnuRem
+2025-12-08T02:49:36.650Z - Attempting login for email: admin@booklocator.com
+2025-12-08T02:49:36.879Z - Password mismatch for email: admin@booklocator.com
+2025-12-08T02:49:36.880Z - Provided password: 'password1234' (length: 12)
+2025-12-08T02:49:36.880Z - Stored hash: $2b$10$ni5rt/PbD7jAdjXjvR7H2eC5MeaCIjC7XpUkd6FLVkAmVG6XnuRem
+2025-12-08T02:49:43.578Z - Attempting login for email: admin@booklocator.com
+2025-12-08T02:49:43.809Z - Password mismatch for email: admin@booklocator.com
+2025-12-08T02:49:43.809Z - Provided password: 'password1234' (length: 12)
+2025-12-08T02:49:43.809Z - Stored hash: $2b$10$ni5rt/PbD7jAdjXjvR7H2eC5MeaCIjC7XpUkd6FLVkAmVG6XnuRem
