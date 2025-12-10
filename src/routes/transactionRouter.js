@@ -10,6 +10,7 @@ import {
   recordCommissionPayment,
   shareContactInfo,
   getPendingCommissions,
+  createPaymentIntent,
 } from "../controllers/transactionController.js";
 
 const router = express.Router();
@@ -21,6 +22,7 @@ router.get("/incoming-requests", protect, getIncomingRequests);
 router.get("/pending-commissions", protect, getPendingCommissions);
 router.get("/:id", protect, getTransactionById);
 router.put("/:id/status", protect, updateTransactionStatus);
+router.post("/:id/payment-intent", protect, createPaymentIntent);
 router.post("/:id/pay-commission", protect, recordCommissionPayment);
 router.post("/:id/share-contact", protect, shareContactInfo);
 

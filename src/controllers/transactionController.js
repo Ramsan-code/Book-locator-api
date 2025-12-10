@@ -1,6 +1,7 @@
 import Transaction from "../models/Transaction.js";
 import Book from "../models/Book.js";
 import { sendEmail } from "../services/emailService.js";
+import stripe from "../config/stripe.js";
 
 // UPDATED: Create transaction - only BUY, no rent
 export const createTransaction = async (req, res, next) => {
@@ -207,6 +208,59 @@ export const updateTransactionStatus = async (req, res, next) => {
   }
 };
 
+// Create Stripe Payment Intent
+export const createPaymentIntent = async (req, res, next) => {
+  try {
+    const { role } = req.body; // 'buyer' or 'seller'
+    const transaction = await Transaction.findById(req.params.id);
+
+    if (!transaction) {
+      return res.status(404).json({ message: "Transaction not found" });
+    }
+
+    // Verify user is authorized
+    const isBuyer = transaction.buyer.toString() === req.user._id.toString();
+    const isSeller = transaction.seller.toString() === req.user._id.toString();
+
+    if ((role === 'buyer' && !isBuyer) || (role === 'seller' && !isSeller)) {
+      return res.status(403).json({ message: "Not authorized" });
+    }
+
+    // Calculate amount in cents (Stripe expects integer)
+    // Using the stored commission amount
+    let amount = Math.round(transaction.commissionAmount * 100);
+
+    // Enforce minimum amount for Stripe (approx 150 LKR, setting to 200 LKR to be safe)
+    if (amount < 20000) {
+      amount = 20000; // 200.00 LKR
+    }
+
+    console.log(`Creating PaymentIntent: Amount=${amount}, Currency=lkr, Role=${role}`);
+
+    // Create PaymentIntent
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount,
+      currency: "lkr", // Changed to LKR as per previous context
+      metadata: {
+        transactionId: transaction._id.toString(),
+        role,
+        userId: req.user._id.toString()
+      },
+      automatic_payment_methods: {
+        enabled: true,
+      },
+    });
+
+    res.json({
+      clientSecret: paymentIntent.client_secret,
+    });
+
+  } catch (error) {
+    console.error("Stripe Error:", error);
+    next(error);
+  }
+};
+
 // Record commission payment from buyer or seller
 export const recordCommissionPayment = async (req, res, next) => {
   try {
@@ -225,6 +279,18 @@ export const recordCommissionPayment = async (req, res, next) => {
 
     if (!isBuyer && !isSeller)
       return res.status(403).json({ message: "Not authorized" });
+
+    // Verify payment with Stripe
+    const paymentIntent = await stripe.paymentIntents.retrieve(paymentId);
+    if (paymentIntent.status !== 'succeeded') {
+      return res.status(400).json({ message: "Payment not successful" });
+    }
+
+    // Verify metadata matches
+    if (paymentIntent.metadata.transactionId !== transaction._id.toString() || 
+        paymentIntent.metadata.role !== role) {
+      return res.status(400).json({ message: "Invalid payment metadata" });
+    }
 
     // Record payment based on role
     if (role === "buyer" && isBuyer) {
