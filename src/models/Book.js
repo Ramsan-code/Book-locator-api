@@ -13,12 +13,12 @@ const bookSchema = new mongoose.Schema(
     },
     category: {
       type: String,
-      enum: ["Fiction", "Non-fiction", "Education", "Comics", "Other"],
+      enum: ["Fiction", "Non-fiction", "Education", "Comics", "Sci-Fi", "Mystery", "Fantasy", "Romance", "Thriller", "Biography", "Self-Help", "History", "Other"],
       default: "Other",
     },
     condition: {
       type: String,
-      enum: ["New", "Good", "Used"],
+      enum: ["New", "Good", "Used", "Bad", "Damaged", "Other"],
       default: "Used",
     },
     price: {
