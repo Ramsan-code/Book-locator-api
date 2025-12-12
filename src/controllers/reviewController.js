@@ -3,7 +3,7 @@ import Book from "../models/Book.js";
 export const getAllReviews = async (req, res, next) => {
   try {
     const reviews = await Review.find()
-      .populate("reviewer", "name email")
+      .populate("reviewer", "name email image")
       .populate("book", "title image")
       .sort({ createdAt: -1 });
 
