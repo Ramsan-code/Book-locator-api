@@ -8,6 +8,7 @@ import {
   getProfile,
   updateProfile,
   getAllReaders,
+  getReaderById,
   changePassword,
   deleteAccount,
 } from "../controllers/readerController.js";
@@ -22,5 +23,8 @@ router.put("/profile", protect, updateProfile);
 router.put("/change-password", protect, changePassword);
 router.delete("/account", protect, deleteAccount);
 router.post("/logout", protect, logoutReader);
+
+// This must come AFTER /profile to avoid capturing "profile" as an ID
+router.get("/:id", getReaderById);
 
 export default router;

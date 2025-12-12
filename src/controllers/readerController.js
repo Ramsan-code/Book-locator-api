@@ -12,6 +12,31 @@ export const getAllReaders = async (req, res) => {
   }
 };
 
+// Get a specific reader by ID (public profile)
+export const getReaderById = async (req, res) => {
+  try {
+    const reader = await Reader.findById(req.params.id).select("-password");
+    if (!reader) {
+      return res.status(404).json({ message: "Reader not found" });
+    }
+    res.status(200).json({
+      success: true,
+      data: {
+        _id: reader._id,
+        name: reader.name,
+        email: reader.email,
+        city: reader.city,
+        address: reader.address,
+        image: reader.image,
+        bio: reader.bio,
+        createdAt: reader.createdAt,
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 //  UPDATED: Register with welcome email
 export const registerReader = async (req, res, next) => {
   try {

@@ -4,7 +4,7 @@ export const getAllReviews = async (req, res, next) => {
   try {
     const reviews = await Review.find()
       .populate("reviewer", "name email")
-      .populate("book", "title")
+      .populate("book", "title image")
       .sort({ createdAt: -1 });
 
     res.json(reviews);
