@@ -99,7 +99,7 @@ export const getAllBooks = async (req, res) => {
     const skip = (pageNum - 1) * limitNum;
 
     const books = await Book.find(query)
-      .populate("owner", "name email location")
+      .populate("owner", "name email location city")
       .sort(sortQuery)
       .skip(skip)
       .limit(limitNum);
@@ -156,7 +156,7 @@ export const getBooksNearLocation = async (req, res) => {
         },
       },
     })
-      .populate("owner", "name email")
+      .populate("owner", "name email city")
       .limit(20);
 
     res.json({
@@ -182,7 +182,7 @@ export const getFeaturedBooks = async (req, res) => {
       isApproved: true,
       available: true,
     })
-      .populate("owner", "name email")
+      .populate("owner", "name email city")
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limitNum);
@@ -214,7 +214,7 @@ export const getAvailableBooks = async (req, res) => {
     const skip = (pageNum - 1) * limitNum;
 
     const books = await Book.find(query)
-      .populate("owner", "name email location")
+      .populate("owner", "name email location city")
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limitNum);
@@ -294,7 +294,7 @@ export const advancedSearch = async (req, res) => {
     const skip = (pageNum - 1) * limitNum;
 
     const books = await Book.find(query)
-      .populate("owner", "name email")
+      .populate("owner", "name email city")
       .sort(sortQuery)
       .skip(skip)
       .limit(limitNum);
@@ -345,7 +345,7 @@ export const getBooksByCategory = async (req, res) => {
     }
 
     const books = await Book.find(query)
-      .populate("owner", "name email")
+      .populate("owner", "name email city")
       .sort(sortQuery)
       .skip(skip)
       .limit(limitNum);
@@ -368,7 +368,7 @@ export const getBooksByCategory = async (req, res) => {
 export const getBooksById = async (req, res) => {
   try {
     const bookID = req.params.id;
-    const book = await Book.findById(bookID).populate("owner", "name email location");
+    const book = await Book.findById(bookID).populate("owner", "name email location city");
     
     if (!book) {
       return res.status(404).json({ message: "Book not found" });
