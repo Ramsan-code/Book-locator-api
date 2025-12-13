@@ -75,7 +75,7 @@ export const getUserTransactions = async (req, res, next) => {
     const transactions = await Transaction.find({
       $or: [{ buyer: req.user._id }, { seller: req.user._id }],
     })
-      .populate("book", "title author price")
+      .populate("book", "title author price address city")
       .populate("buyer", "name email")
       .populate("seller", "name email")
       .sort({ createdAt: -1 });
@@ -91,7 +91,7 @@ export const getMyRequests = async (req, res, next) => {
     const transactions = await Transaction.find({
       buyer: req.user._id,
     })
-      .populate("book", "title author price owner")
+      .populate("book", "title author price owner address city")
       .populate("seller", "name email phone_no")
       .sort({ createdAt: -1 });
 
@@ -106,9 +106,8 @@ export const getIncomingRequests = async (req, res, next) => {
     const transactions = await Transaction.find({
       seller: req.user._id,
     })
-      .populate("book", "title author price")
+      .populate("book", "title author price address city")
       .populate("buyer", "name email phone_no")
-
       .sort({ createdAt: -1 });
     
     // Map buyer to requester for frontend compatibility if needed
@@ -129,7 +128,7 @@ export const getIncomingRequests = async (req, res, next) => {
 export const getTransactionById = async (req, res, next) => {
   try {
     const transaction = await Transaction.findById(req.params.id)
-      .populate("book", "title author price")
+      .populate("book", "title author price address city")
       .populate("buyer", "name email")
       .populate("seller", "name email");
 
@@ -154,7 +153,7 @@ export const updateTransactionStatus = async (req, res, next) => {
     const transaction = await Transaction.findById(req.params.id)
       .populate("buyer", "name email phone_no address city")
       .populate("seller", "name email phone_no address city")
-      .populate("book", "title author price");
+      .populate("book", "title author price address city");
 
     if (!transaction)
       return res.status(404).json({ message: "Transaction not found" });
@@ -348,7 +347,7 @@ export const shareContactInfo = async (req, res, next) => {
     const transaction = await Transaction.findById(req.params.id)
       .populate("buyer", "name email phone_no address city")
       .populate("seller", "name email phone_no address city")
-      .populate("book", "title author price");
+      .populate("book", "title author price address city");
 
     if (!transaction)
       return res.status(404).json({ message: "Transaction not found" });
@@ -378,7 +377,7 @@ export const shareContactInfo = async (req, res, next) => {
       sellerName: transaction.seller.name,
       sellerEmail: transaction.seller.email,
       sellerPhone: transaction.seller.phone_no || "Not provided",
-      sellerAddress: transaction.seller.address || transaction.seller.city || "Not provided",
+      sellerAddress: transaction.book.address || transaction.seller.address || transaction.seller.city || "Not provided",
       bookTitle: transaction.book.title,
       bookAuthor: transaction.book.author,
       price: transaction.book.price,
@@ -422,7 +421,7 @@ export const getPendingCommissions = async (req, res, next) => {
     const transactions = await Transaction.find({
       status: { $in: ["commission_pending", "commission_paid"] },
     })
-      .populate("book", "title author price")
+      .populate("book", "title author price address city")
       .populate("buyer", "name email")
       .populate("seller", "name email")
       .sort({ createdAt: -1 });

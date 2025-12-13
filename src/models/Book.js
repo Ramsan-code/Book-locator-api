@@ -37,6 +37,10 @@ const bookSchema = new mongoose.Schema(
         required: true,
       },
     },
+    address: {
+      type: String,
+      required: [true, "Address is required"],
+    },
     owner: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Reader",
