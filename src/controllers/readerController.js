@@ -111,6 +111,8 @@ export const loginReader = async (req, res, next) => {
       isApproved: reader.isApproved,
       isActive: reader.isActive,
       image: reader.image,
+      phone_no: reader.phone_no,
+      city: reader.city,
       token,
     });
   } catch (error) {
