@@ -110,6 +110,7 @@ export const loginReader = async (req, res, next) => {
       role: reader.role,
       isApproved: reader.isApproved,
       isActive: reader.isActive,
+      image: reader.image,
       token,
     });
   } catch (error) {
