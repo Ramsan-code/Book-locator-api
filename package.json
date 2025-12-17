@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "seed:admin": "node seeds/adminSeed.js"
+    "seed:admin": "node seeds/adminSeed.js",
+    "seed:demo": "node seeds/demoSeed.js"
   },
   "keywords": [
     "books",
@@ -15,8 +16,12 @@
     "express",
     "mongodb"
   ],
-  "author": "ramsan",
-  "license": "ISC",
+  "author": "Book Locator Contributors",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Ramsan-code/Book_Locator.git"
+  },
   "type": "module",
   "dependencies": {
     "bcryptjs": "^3.0.3",
